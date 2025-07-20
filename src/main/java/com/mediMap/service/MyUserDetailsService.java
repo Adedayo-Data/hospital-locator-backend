@@ -4,7 +4,6 @@ import com.mediMap.model.UserPrincipal;
 import com.mediMap.model.Users;
 import com.mediMap.repository.UserRepositoy;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
