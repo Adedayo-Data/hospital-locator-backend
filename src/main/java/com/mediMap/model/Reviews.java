@@ -14,7 +14,7 @@ public class Reviews {
     private Long id;
 
     @ManyToOne
-    private Long hospital_id;
+    private Hospital hospital;
 
     @ManyToOne
     private Users user;
