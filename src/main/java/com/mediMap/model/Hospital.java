@@ -5,6 +5,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
+import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,9 +26,11 @@ public class Hospital {
     private Boolean emergency;
     private String openingHours;
     private String website;
-    private Double ratings;
     private Double lat;
     private Double lng;
+    private Double ratings;
+
+    @CurrentTimestamp
     private LocalDate CreatedAt;
 
 }

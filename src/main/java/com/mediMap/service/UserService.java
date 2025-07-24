@@ -12,7 +12,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @AllArgsConstructor
@@ -20,15 +24,20 @@ public class UserService {
 
     private UserRepositoy userRepo;
     private JwtService jwtService;
+    private PasswordEncoder passwordEncoder;
 
     public AuthMessage saveUser(UserRequestDTO requestDTO){
         Users user = new Users();
         user.setFullName(requestDTO.getFullName());
         user.setEmail(requestDTO.getEmail());
-        user.setPassword(requestDTO.getPassword());
+        user.setPassword(passwordEncoder.encode(requestDTO.getPassword()));
         user.setRole(ROLE.valueOf(requestDTO.getRole()));
+        user.setCreatedAt(LocalDate.now());
 
-        user = userRepo.save(user);
+        System.out.println("User object is: " + user);
+
+        Users newUser = userRepo.save(user);
+        System.out.println("New User object is: " + newUser);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword());
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -42,13 +51,18 @@ public class UserService {
     public AuthMessage validateUser(LoginRequest loginRequest){
         String email = loginRequest.getEmail();
         String loginPassword = loginRequest.getPassword();
+
+        System.out.println("email is: " + email);
+        System.out.println("User Password: " + loginPassword);
         Users user = userRepo.findByEmail(email);
+        System.out.println("User from db" + user.getPassword());
 
         if(user == null){
             throw new UsernameNotFoundException("No user with this email Address!");
         }
 
         if(loginPassword.matches(user.getPassword())){
+            System.out.println("Condition passed");
             String jwt = jwtService.generateToken(user);
             return new AuthMessage(jwt, "Login Successful", user.getRole());
         }

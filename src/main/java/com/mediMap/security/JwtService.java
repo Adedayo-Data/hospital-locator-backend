@@ -4,6 +4,7 @@ import com.mediMap.model.Users;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,9 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
+    @Autowired
+    JwtConstant constant;
+
     public String generateToken(Users users){
 
         Map<String, String> claim = new HashMap<>();
@@ -24,14 +28,14 @@ public class JwtService {
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 10000 * 60 * 60))
                 .claims(claim)
-                .signWith(Keys.hmacShaKeyFor(JwtConstant.JWTKEY.getBytes()))
+                .signWith(Keys.hmacShaKeyFor(constant.JWTKEY.getBytes()))
                 .compact();
     } // end Generate token
 
     // validate the token
     public Claims getAllClaims(String token){
         return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(JwtConstant.JWTKEY.getBytes()))
+                .verifyWith(Keys.hmacShaKeyFor(constant.JWTKEY.getBytes()))
                 .build()
                 .parseSignedClaims(token) // Meaning: with the verified key check this claim
                 .getPayload();

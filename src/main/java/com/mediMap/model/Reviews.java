@@ -2,6 +2,8 @@ package com.mediMap.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
 
 import java.time.LocalDate;
 
@@ -18,6 +20,9 @@ public class Reviews {
 
     @ManyToOne
     private Users user;
+    private double ratings;
     private String comment;
+
+    @CreationTimestamp
     private LocalDate CreatedAt;
 }
